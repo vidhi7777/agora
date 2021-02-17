@@ -29,6 +29,8 @@ interface State {
   channelName: string;
   joinSucceed: boolean;
   peerIds: number[];
+  audMute: boolean;
+  vidMute: boolean;
 }
 
 export default class App extends Component<Props, State> {
@@ -38,10 +40,12 @@ export default class App extends Component<Props, State> {
     super(props);
     this.state = {
       appId: "077c69b0782d44c98a973c40be37d6dd",
-      token: "006077c69b0782d44c98a973c40be37d6ddIADTnPWdg07j6hKd+o0YDQCNtrvKU6fzAbuB/fQ3hJYTLQJkFYoAAAAAEABwjq6PNG0rYAEAAQBlbStg",
+      token: "006077c69b0782d44c98a973c40be37d6ddIADblXVcUwTxLr4ozIim1mq2QUjiuUVQSCm5K2DpjjTVeQJkFYoAAAAAEABwjq6PEgYtYAEAAQBDBi1g",
       channelName: 'channel-x',
       joinSucceed: false,
       peerIds: [],
+      audMute: false,
+      vidMute: false,
     };
     if (Platform.OS === 'android') {
       // Request required permissions from Android
@@ -120,24 +124,25 @@ export default class App extends Component<Props, State> {
 
   
   toggleAudio = async () => {
-    let mute = true;
-    //let mute = this.state.audMute;
-    //console.log('Audio toggle', mute);
-    console.log('Audio toggle');
+    //let mute = true;
+    let mute = this.state.audMute;
+    console.log('Audio toggle', mute);
+    //console.log('Audio toggle');
     this._engine?.muteLocalAudioStream(!mute);
-    //this.setState({
-    //audMute: !mute,
-    //});
+    this.setState({
+    audMute: !mute,
+    });
     }
   
   toggleVideo = async () => {
-    let mute = true;
-    //console.log('Video toggle', mute);
-    //this.setState({
-    //vidMute: !mute,
-    //});
-    console.log('Video toggle');
+    //let mute = true;
+    let mute = this.state.vidMute;
+    this.setState({
+        vidMute: !mute,
+        });
     this._engine?.muteLocalVideoStream(!mute);
+    console.log('Video toggle', mute);
+    //console.log('Video toggle');
     }
   
   /**
@@ -147,6 +152,7 @@ export default class App extends Component<Props, State> {
   endCall = async () => {
     await this._engine?.leaveChannel();
     this.setState({ peerIds: [], joinSucceed: false });
+    console.log("Call End");
   };
 
   render() {
